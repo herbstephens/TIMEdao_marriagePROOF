@@ -44,9 +44,9 @@ export default function Home() {
 
     try {
       // Request World ID verification
-      // The verify function will check if in World App internally
+      // Using APP_ACCESS action for general app access (unlimited verifications)
       const result = await verify(
-        WORLD_ACTIONS.CREATE_PROPOSAL, // Using create proposal action for general access
+        WORLD_ACTIONS.APP_ACCESS,
         undefined, // No signal needed for general access
       );
 

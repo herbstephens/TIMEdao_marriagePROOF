@@ -84,10 +84,16 @@ export enum WorldVerificationLevel {
 
 /**
  * Action IDs for World ID verification
- * These must be created in the Developer Portal
+ * These must be created in the Developer Portal as Incognito Actions
  * Format: action-name-in-kebab-case
+ * 
+ * Actions created:
+ * - app-access: Unlimited verifications for general app access
+ * - create-marriage-proposal: Unique (1 per user) for creating proposals
+ * - accept-marriage-proposal: Unique (1 per user) for accepting proposals
  */
 export const WORLD_ACTIONS = {
+  APP_ACCESS: 'app-access',
   CREATE_PROPOSAL: 'create-marriage-proposal',
   ACCEPT_PROPOSAL: 'accept-marriage-proposal',
 } as const
