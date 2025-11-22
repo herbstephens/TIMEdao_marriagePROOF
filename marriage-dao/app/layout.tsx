@@ -7,6 +7,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { MiniKitProvider } from "@worldcoin/minikit-js/minikit-provider";
+import { WorldAppChecker } from "./components/WorldAppChecker";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -36,6 +37,8 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          {/* Automatically checks if in World App and redirects to store if not */}
+          <WorldAppChecker />
           {children}
         </body>
       </MiniKitProvider>
