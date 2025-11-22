@@ -20,7 +20,7 @@ marriagePROOF enables two verified humans to get married on chain.  In addition 
 ## Technologies Used & Prizes Sought
 - **World:** "Best Mini App" category. 
 - **Chainlink:** "Connect the World with Chainlink" category. 
-- **Filecoin:** "Best dApps powered by Filecoin Onchain Cloud" category. Immutable, decentralized, privacy-preserving registry of married World IDs that any dating app (Tinder, Bumble, Hinge, etc.) can query with one API call.
+- **Filecoin:** "Best dApps powered by Filecoin Onchain Cloud" category. Filecoin used to manage an immutable, decentralized, privacy-preserving registry of married World IDs that any dating app (Tinder, Bumble, Hinge, etc.) can query with one API call.
 - **TOP TEN:**
 
 ## Contributors
