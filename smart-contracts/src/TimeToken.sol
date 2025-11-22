@@ -8,7 +8,7 @@ import {Ownable} from "openzeppelin-contracts/contracts/access/Ownable.sol";
  * @title DayToken
  * @dev A basic ERC20 token used for rewarding bonded users.
  */
-contract DayToken is ERC20, ERC20Burnable, Ownable {
+contract TimeToken is ERC20, ERC20Burnable, Ownable {
     constructor() ERC20("Day Token", "DAY") Ownable(msg.sender) {}
 
     /// @notice Mint new DAY tokens to a specified address.
