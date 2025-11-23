@@ -31,6 +31,7 @@ marriageDAO enables two verified humans to get married on chain.  In addition to
 
 ## Contact
 herb@democracy.earth
+
 herbstephens.eth
 
 ## NOTE
