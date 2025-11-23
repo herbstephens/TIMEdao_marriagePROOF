@@ -24,14 +24,12 @@ contract DummyWorldID is IWorldID {
 contract DeployScript is Script {
     function run() external {
         // Load private key from .env file
-        uint256 deployerPrivateKey = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
-        vm.startBroadcast(deployerPrivateKey);
+        vm.startBroadcast();
 
         // Step 1: Deploy contract and token
         VowNFT vowNFT = new VowNFT();
         MilestoneNFT milestoneNFT = new MilestoneNFT();
         TimeToken timeToken = new TimeToken();
-        DummyWorldID worldId = new DummyWorldID(); //(replace with real one later)
 
         // Step 2: Set milestone metadata URIs BEFORE ownership transfer
         milestoneNFT.setMilestoneURI(
@@ -50,11 +48,14 @@ contract DeployScript is Script {
             4,
             "ipfs://QmSw9ixqCVc7VPQzDdX1ZCdWWJwAfLHRdJsi831PsC94uh"
         );
+        milestoneNFT.freezeMilestones();
 
         // Step 3: Deploy HumanBond main contract
-        uint256 externalNullifier = 12345; // replace if needed
+        // uint256 externalNullifier = 12345; // replace if needed
+        uint256 externalNullifier = uint256(keccak256("marriage-proposal-v1"));
+
         HumanBond humanBond = new HumanBond(
-            address(worldId),
+            0x17B354dD2595411ff79041f930e491A4Df39A278, // REAL WORLD ID ROUTER
             address(vowNFT),
             address(timeToken),
             address(milestoneNFT),
@@ -71,11 +72,11 @@ contract DeployScript is Script {
 
         vm.stopBroadcast();
 
-        // Logs
-        console.log("Deployment complete!");
-        console.log("VowNFT deployed at:", address(vowNFT));
-        console.log("MilestoneNFT deployed at:", address(milestoneNFT));
-        console.log("HumanBond deployed at:", address(humanBond));
-        console.log("DummyWorldID deployed at:", address(worldId));
+        // // Logs
+        // console.log("Deployment complete!");
+        // console.log("VowNFT deployed at:", address(vowNFT));
+        // console.log("MilestoneNFT deployed at:", address(milestoneNFT));
+        // console.log("HumanBond deployed at:", address(humanBond));
+        // console.log("DummyWorldID deployed at:", address(worldId));
     }
 }
