@@ -4,7 +4,7 @@ ETHGlobal Buenos Aires 2025 hackathon submission
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Features](#features)
-3. [Technologies Used & Prizes Sought For](#technologies-used--prizes-sought-for)
+3. [Technologies Used & Prizes Sought](#technologies-used--prizes-sought-for)
 4. [Contributors](#contributors)
 5. [Contact](#contact)
 
