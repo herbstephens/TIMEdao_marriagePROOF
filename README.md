@@ -20,10 +20,8 @@ marriageDAO enables two verified humans to get married on chain.  In addition to
 
 ## Technologies Used & Prizes Sought
 - **World:**  "Best Mini App" category. 
-- **Chainlink:**  "Connect the World with Chainlink" category. MarriageDAO uses Chainlink to provides decentralized, tamper-proof time triggers (Automation) and verifiable randomness (VRF) that guarantee milestone NFTs are issued with correct timing.
-This ensures every marriage milestone is immutable, automatic, and cryptographically unique — the perfect on-chain celebration. ⏰
 - **Filecoin:**  "Best dApps powered by Filecoin Onchain Cloud" category. Filecoin used to manage an immutable, decentralized, privacy-preserving registry of married World IDs that any dating app (Tinder, Bumble, Hinge, etc.) can query with one API call.
-- **ENS:**  
+- **ENS:**  Every marriage gets a sub-domain of marriagedao.ens.
 - **Top Ten Finalist:**  
 
 ## Contributors
