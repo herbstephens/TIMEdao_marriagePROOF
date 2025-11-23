@@ -7,6 +7,9 @@
 
 import { useState } from "react";
 
+import { registerENS } from "@/app/integration/ensIntegration";
+import { fileCoinPin } from "@/app/integration/filecoinIntegration";
+
 export function AcceptProposalForm() {
   const [proposerAddress, setProposerAddress] = useState("");
 
@@ -15,6 +18,11 @@ export function AcceptProposalForm() {
     e.preventDefault();
     // TODO: Integrate with smart contract when wagmi is ready
     console.log("Accepting proposal from:", proposerAddress);
+    // TODO: Add meaningful content to FileCoin
+    fileCoinPin("${requester}-${accepter}-${timestamp}.json", JSON.stringify({}));
+    // TODO: Add EMS domain request to the form
+    const ENSRequested = false;
+    if (ENSRequested) registerENS("${requestedENS}.marriageDAO.ens");
   };
 
   return (
