@@ -33,6 +33,3 @@ marriagePROOF enables two verified humans to get married on chain.  In addition 
 - Franco Amicone: Front-end Developer (Argentina)
 - Leticia Azevedo: Smart Contracts Developer (Brasil)
 - Axel Ország-Krisz: Full-stack Developer (Hungary)
-
-## Contact
-herb@democracy.earth
