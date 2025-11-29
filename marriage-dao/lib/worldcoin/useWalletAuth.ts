@@ -35,7 +35,7 @@ const generateNonce = (): string => {
  */
 export const useWalletAuth = () => {
   // Get wallet address from Zustand store (persisted)
-  const { walletAddress, setWalletAddress, clearWallet } = useAuthStore()
+  const { walletAddress, setWalletAddress, clearWallet, manuallyDisconnected } = useAuthStore()
   
   // Local loading/error state
   const [isConnecting, setIsConnecting] = useState(false)
@@ -44,9 +44,16 @@ export const useWalletAuth = () => {
   /**
    * Check if MiniKit.user has wallet address on mount
    * This can be available if user already authenticated in this session
+   * BUT only if user didn't manually disconnect
    */
   useEffect(() => {
     if (typeof window === 'undefined') return
+    
+    // Don't auto-reconnect if user manually disconnected
+    if (manuallyDisconnected) {
+      console.log('🚫 Skipping auto-reconnect: user manually disconnected')
+      return
+    }
 
     const timer = setTimeout(() => {
       // Check if wallet is already available from previous session/action
@@ -57,7 +64,7 @@ export const useWalletAuth = () => {
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [walletAddress, setWalletAddress])
+  }, [walletAddress, setWalletAddress, manuallyDisconnected])
 
   /**
    * Connect wallet using MiniKit walletAuth command

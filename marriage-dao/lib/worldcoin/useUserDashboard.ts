@@ -33,13 +33,20 @@ export function useUserDashboard() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        let isActive = true;
+
         async function fetchDashboard() {
             if (!isConnected || !address) {
+                if (!isActive) return;
+                setDashboard(null);
+                setProposal(null);
+                setError(null);
                 setIsLoading(false);
                 return;
             }
 
             try {
+                if (!isActive) return;
                 setIsLoading(true);
                 setError(null);
 
@@ -51,6 +58,7 @@ export function useUserDashboard() {
                     args: [address as `0x${string}`],
                 }) as UserDashboard;
 
+                if (!isActive) return;
                 setDashboard(dashboardData);
 
                 // If user has a proposal, fetch proposal details
@@ -62,20 +70,28 @@ export function useUserDashboard() {
                         args: [address as `0x${string}`],
                     }) as ProposalInfo;
 
+                    if (!isActive) return;
                     setProposal(proposalData);
                 } else {
                     setProposal(null);
                 }
 
             } catch (err) {
+                if (!isActive) return;
                 console.error('Error fetching user dashboard:', err);
                 setError(err instanceof Error ? err.message : 'Failed to fetch dashboard');
             } finally {
-                setIsLoading(false);
+                if (isActive) {
+                    setIsLoading(false);
+                }
             }
         }
 
         fetchDashboard();
+
+        return () => {
+            isActive = false;
+        };
     }, [address, isConnected]);
 
     return {

@@ -26,6 +26,7 @@ type AuthState = {
   isVerified: boolean
   verificationData: VerificationData | null
   walletAddress: string | null
+  manuallyDisconnected: boolean // Flag to prevent auto-reconnect
 
   // Actions
   setVerified: (data: VerificationData) => void
@@ -45,6 +46,7 @@ export const useAuthStore = create<AuthState>()(
       isVerified: false,
       verificationData: null,
       walletAddress: null,
+      manuallyDisconnected: false,
 
       /**
        * Set user as verified
@@ -62,6 +64,7 @@ export const useAuthStore = create<AuthState>()(
       setWalletAddress: (address: string) => {
         set({
           walletAddress: address,
+          manuallyDisconnected: false, // Reset flag when connecting
         })
       },
 
@@ -71,6 +74,7 @@ export const useAuthStore = create<AuthState>()(
       clearWallet: () => {
         set({
           walletAddress: null,
+          manuallyDisconnected: true, // Set flag to prevent auto-reconnect
         })
       },
 
@@ -82,6 +86,7 @@ export const useAuthStore = create<AuthState>()(
           isVerified: false,
           verificationData: null,
           walletAddress: null,
+          manuallyDisconnected: true, // Set flag to prevent auto-reconnect
         })
       },
 

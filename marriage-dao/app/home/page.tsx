@@ -24,8 +24,8 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
 
   // Get marriage status from contract
-  const isMarried = dashboard?.isMarried ?? false;
-  const hasProposal = dashboard?.hasProposal ?? false;
+  const isMarried = isConnected && (dashboard?.isMarried ?? false);
+  const hasProposal = isConnected && (dashboard?.hasProposal ?? false);
 
   // Debug: Log connection state
   useEffect(() => {
@@ -148,7 +148,7 @@ export default function HomePage() {
         ) : (
           <div className="flex flex-col items-center text-center">
             {/* Marriage Dashboard */}
-            {dashboard && <MarriageDashboard dashboard={dashboard} onDivorce={refetch} />}
+            {dashboard && isConnected && <MarriageDashboard dashboard={dashboard} onDivorce={refetch} />}
           </div>
         )}
       </main>

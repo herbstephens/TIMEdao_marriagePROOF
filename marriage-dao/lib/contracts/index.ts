@@ -113,6 +113,13 @@ export const HUMAN_BOND_ABI = [
   },
   {
     type: 'function',
+    name: 'claimYield',
+    inputs: [{ name: 'partner', type: 'address', internalType: 'address' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     name: 'divorce',
     inputs: [{ name: 'partner', type: 'address', internalType: 'address' }],
     outputs: [],
@@ -125,6 +132,16 @@ export const HUMAN_BOND_ABI = [
       { name: 'partnerA', type: 'address', indexed: true, internalType: 'address' },
       { name: 'partnerB', type: 'address', indexed: true, internalType: 'address' },
       { name: 'timestamp', type: 'uint256', indexed: false, internalType: 'uint256' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'YieldClaimed',
+    inputs: [
+      { name: 'partnerA', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'partnerB', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'rewardEach', type: 'uint256', indexed: false, internalType: 'uint256' },
     ],
     anonymous: false,
   },
