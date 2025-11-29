@@ -96,12 +96,11 @@ export function MarriageDashboard({ dashboard, onRefresh }: MarriageDashboardPro
             }
 
             setDivorceState("success");
-            setShowConfirm(false);
-
-            // Call callback to refresh dashboard
-            if (onRefresh) {
-                onRefresh();
-            }
+            // Don't close modal or refresh yet - wait for user to click Continue
+            // setShowConfirm(false);
+            // if (onRefresh) {
+            //     onRefresh();
+            // }
         } catch (err) {
             setDivorceState("error");
             setError(err instanceof Error ? err.message : "Failed to divorce");
@@ -212,25 +211,35 @@ export function MarriageDashboard({ dashboard, onRefresh }: MarriageDashboardPro
                     {/* Overlay */}
                     <div
                         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-                        onClick={() => !divorceState.includes("sending") && setShowConfirm(false)}
+                        onClick={() => !divorceState.includes("sending") && divorceState !== "success" && setShowConfirm(false)}
                     />
 
                     {/* Modal */}
                     <div className="relative bg-white rounded-3xl p-6 mx-4 max-w-sm w-full shadow-2xl space-y-4 animate-in fade-in zoom-in duration-200">
                         {/* Icon */}
                         <div className="text-center">
-                            <span className="text-4xl">💔</span>
+                            <span className="text-4xl">
+                                {divorceState === "success" ? "👋" : "💔"}
+                            </span>
                         </div>
 
                         {/* Title */}
                         <h3 className="text-xl font-semibold text-gray-900 text-center">
-                            End Marriage?
+                            {divorceState === "success" ? "Marriage Ended" : "End Marriage?"}
                         </h3>
 
                         {/* Description */}
-                        <p className="text-sm text-gray-600 text-center">
-                            Are you sure you want to end this marriage? Pending TIME tokens will be distributed to both partners.
-                        </p>
+                        {divorceState !== "success" ? (
+                            <p className="text-sm text-gray-600 text-center">
+                                Are you sure you want to end this marriage? Pending TIME tokens will be distributed to both partners.
+                            </p>
+                        ) : (
+                            <div className="p-3 bg-green-50 border border-green-200 rounded-xl">
+                                <p className="text-sm text-green-800 text-center">
+                                    Marriage dissolved successfully. Tokens have been distributed.
+                                </p>
+                            </div>
+                        )}
 
                         {/* Error Message */}
                         {error && (
@@ -239,31 +248,36 @@ export function MarriageDashboard({ dashboard, onRefresh }: MarriageDashboardPro
                             </div>
                         )}
 
-                        {/* Success Message */}
-                        {divorceState === "success" && (
-                            <div className="p-3 bg-green-50 border border-green-200 rounded-xl">
-                                <p className="text-sm text-green-800 text-center">
-                                    Marriage dissolved. Tokens distributed.
-                                </p>
-                            </div>
-                        )}
-
                         {/* Buttons */}
                         <div className="flex gap-3 pt-2">
-                            <button
-                                onClick={() => setShowConfirm(false)}
-                                className="flex-1 py-3 px-4 rounded-full text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
-                                disabled={divorceState === "sending"}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleDivorce}
-                                className="flex-1 py-3 px-4 rounded-full text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                disabled={divorceState === "sending"}
-                            >
-                                {divorceState === "sending" ? "Processing..." : "Confirm"}
-                            </button>
+                            {divorceState === "success" ? (
+                                <button
+                                    onClick={() => {
+                                        setShowConfirm(false);
+                                        if (onRefresh) onRefresh();
+                                    }}
+                                    className="w-full py-3 px-4 rounded-full text-sm font-medium text-white bg-black hover:bg-gray-800 transition-colors"
+                                >
+                                    Continue
+                                </button>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={() => setShowConfirm(false)}
+                                        className="flex-1 py-3 px-4 rounded-full text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
+                                        disabled={divorceState === "sending"}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleDivorce}
+                                        className="flex-1 py-3 px-4 rounded-full text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled={divorceState === "sending"}
+                                    >
+                                        {divorceState === "sending" ? "Processing..." : "Confirm"}
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

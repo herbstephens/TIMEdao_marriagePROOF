@@ -19,18 +19,7 @@ import { isInWorldApp } from "@/lib/worldcoin/initMiniKit";
 
 type AcceptState = "idle" | "verifying" | "sending" | "success" | "error";
 
-// Debug info type
-type DebugInfo = {
-  step: string;
-  userWallet: string | null;
-  proposerAddress: string | null;
-  verifyPayload: object | null;
-  merkleRoot: string | null;
-  nullifierHash: string | null;
-  proofArray: string[] | null;
-  txPayload: object | null;
-  error: string | null;
-};
+
 
 export function AcceptProposalForm() {
   const [proposerAddress, setProposerAddress] = useState("");
@@ -38,18 +27,7 @@ export function AcceptProposalForm() {
   const [error, setError] = useState<string | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [isWorldApp, setIsWorldApp] = useState(false);
-  const [showDebug, setShowDebug] = useState(true); // Debug panel visible
-  const [debugInfo, setDebugInfo] = useState<DebugInfo>({
-    step: "idle",
-    userWallet: null,
-    proposerAddress: null,
-    verifyPayload: null,
-    merkleRoot: null,
-    nullifierHash: null,
-    proofArray: null,
-    txPayload: null,
-    error: null,
-  });
+
 
   const { walletAddress, setWalletAddress } = useAuthStore();
 
@@ -64,11 +42,7 @@ export function AcceptProposalForm() {
         setWalletAddress(MiniKit.user.walletAddress);
       }
 
-      // Update debug info
-      setDebugInfo(prev => ({
-        ...prev,
-        userWallet: MiniKit.user?.walletAddress || walletAddress || null,
-      }));
+
     };
 
     // Give MiniKit time to initialize
@@ -102,26 +76,22 @@ export function AcceptProposalForm() {
     e.preventDefault();
     setError(null);
     setTxHash(null);
-    setDebugInfo(prev => ({ ...prev, error: null, step: "starting" }));
 
     // Validate proposer address
     if (!proposerAddress || !/^0x[a-fA-F0-9]{40}$/.test(proposerAddress)) {
       setError("Please enter a valid Ethereum address");
-      setDebugInfo(prev => ({ ...prev, error: "Invalid proposer address" }));
       return;
     }
 
     // Check if in World App
     if (!isWorldApp) {
       setError("This app must be opened in World App");
-      setDebugInfo(prev => ({ ...prev, error: "Not in World App" }));
       return;
     }
 
     try {
       // Step 1: Verify with World ID
       setState("verifying");
-      setDebugInfo(prev => ({ ...prev, step: "verifying", proposerAddress }));
 
       // Get the user's wallet address - this will be msg.sender in the contract
       const userWallet = MiniKit.user?.walletAddress || walletAddress;
@@ -130,7 +100,7 @@ export function AcceptProposalForm() {
         throw new Error("Wallet address not available. Please try again.");
       }
 
-      setDebugInfo(prev => ({ ...prev, userWallet }));
+
 
       // CRITICAL FIX: Signal must be the ACCEPTOR's address (msg.sender), not the proposer
       const { finalPayload: verifyPayload } = await MiniKit.commandsAsync.verify({
@@ -139,7 +109,7 @@ export function AcceptProposalForm() {
         verification_level: VerificationLevel.Orb,
       });
 
-      setDebugInfo(prev => ({ ...prev, verifyPayload: verifyPayload as object }));
+
 
       if (verifyPayload.status === "error") {
         const errPayload = verifyPayload as any;
@@ -156,13 +126,7 @@ export function AcceptProposalForm() {
       const nullifierHash = verifyPayload.nullifier_hash;
       const proofArray = decodeProof(verifyPayload.proof);
 
-      setDebugInfo(prev => ({
-        ...prev,
-        step: "sending",
-        merkleRoot,
-        nullifierHash,
-        proofArray
-      }));
+
 
       // Step 3: Send transaction via MiniKit
       setState("sending");
@@ -183,7 +147,7 @@ export function AcceptProposalForm() {
         ],
       });
 
-      setDebugInfo(prev => ({ ...prev, txPayload: txPayload as object }));
+
 
       if (txPayload.status === "error") {
         const errPayload = txPayload as any;
@@ -198,14 +162,12 @@ export function AcceptProposalForm() {
 
       // Success!
       setState("success");
-      setDebugInfo(prev => ({ ...prev, step: "success" }));
       setTxHash(txPayload.transaction_id || null);
 
     } catch (err) {
       setState("error");
       const errorMsg = err instanceof Error ? err.message : "Something went wrong";
       setError(errorMsg);
-      setDebugInfo(prev => ({ ...prev, step: "error", error: errorMsg }));
     }
   };
 
@@ -263,13 +225,6 @@ export function AcceptProposalForm() {
           {error && (
             <p className="text-center text-red-600 text-sm">{error}</p>
           )}
-
-          {/* Not in World App warning */}
-          {!isWorldApp && (
-            <p className="text-center text-amber-600 text-sm">
-              ⚠️ Please open this app in World App
-            </p>
-          )}
         </div>
 
         {/* Submit Button */}
@@ -282,70 +237,7 @@ export function AcceptProposalForm() {
         </button>
       </form>
 
-      {/* Debug Panel */}
-      <div className="mt-4">
-        <button
-          type="button"
-          onClick={() => setShowDebug(!showDebug)}
-          className="text-xs text-gray-500 underline mb-2"
-        >
-          {showDebug ? "Hide Debug" : "Show Debug"}
-        </button>
 
-        {showDebug && (
-          <div className="bg-gray-900 text-green-400 p-4 rounded-xl text-xs font-mono overflow-auto max-h-96">
-            <p className="text-yellow-400 mb-2">== DEBUG INFO ==</p>
-
-            <p><span className="text-gray-400">Step:</span> {debugInfo.step}</p>
-            <p><span className="text-gray-400">isWorldApp:</span> {isWorldApp ? "YES" : "NO"}</p>
-            <p><span className="text-gray-400">Contract:</span> {CONTRACT_ADDRESSES.HUMAN_BOND}</p>
-            <p><span className="text-gray-400">Action:</span> {WORLD_APP_CONFIG.ACTIONS.ACCEPT_BOND}</p>
-
-            <p className="text-yellow-400 mt-2">-- Addresses --</p>
-            <p><span className="text-gray-400">User Wallet (Acceptor):</span> {debugInfo.userWallet || "null"}</p>
-            <p><span className="text-gray-400">Proposer:</span> {debugInfo.proposerAddress || proposerAddress || "null"}</p>
-
-            {debugInfo.verifyPayload && (
-              <>
-                <p className="text-yellow-400 mt-2">-- Verify Response --</p>
-                <pre className="whitespace-pre-wrap break-all">
-                  {JSON.stringify(debugInfo.verifyPayload, null, 2)}
-                </pre>
-              </>
-            )}
-
-            {debugInfo.merkleRoot && (
-              <>
-                <p className="text-yellow-400 mt-2">-- Proof Data --</p>
-                <p><span className="text-gray-400">Merkle Root:</span></p>
-                <p className="break-all">{debugInfo.merkleRoot}</p>
-                <p><span className="text-gray-400">Nullifier Hash:</span></p>
-                <p className="break-all">{debugInfo.nullifierHash}</p>
-                <p><span className="text-gray-400">Proof Array:</span></p>
-                {debugInfo.proofArray?.map((p, i) => (
-                  <p key={i} className="break-all">[{i}]: {p}</p>
-                ))}
-              </>
-            )}
-
-            {debugInfo.txPayload && (
-              <>
-                <p className="text-yellow-400 mt-2">-- Transaction Response --</p>
-                <pre className="whitespace-pre-wrap break-all">
-                  {JSON.stringify(debugInfo.txPayload, null, 2)}
-                </pre>
-              </>
-            )}
-
-            {debugInfo.error && (
-              <>
-                <p className="text-red-400 mt-2">-- Error --</p>
-                <p className="text-red-400">{debugInfo.error}</p>
-              </>
-            )}
-          </div>
-        )}
-      </div>
     </div>
   );
 }
