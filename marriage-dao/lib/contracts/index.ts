@@ -20,6 +20,82 @@ export const WORLD_APP_CONFIG = {
   },
 } as const
 
+
+
+// VowNFT ABI
+export const VOW_NFT_ABI = [
+  {
+    type: 'function',
+    name: 'tokenURI',
+    inputs: [{ name: 'tokenId', type: 'uint256', internalType: 'uint256' }],
+    outputs: [{ name: '', type: 'string', internalType: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'balanceOf',
+    inputs: [{ name: 'owner', type: 'address', internalType: 'address' }],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'event',
+    name: 'Transfer',
+    inputs: [
+      { name: 'from', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'to', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'tokenId', type: 'uint256', indexed: true, internalType: 'uint256' },
+    ],
+    anonymous: false,
+  },
+] as const
+
+// MilestoneNFT ABI
+export const MILESTONE_NFT_ABI = [
+  {
+    type: 'function',
+    name: 'tokenURI',
+    inputs: [{ name: 'tokenId', type: 'uint256', internalType: 'uint256' }],
+    outputs: [{ name: '', type: 'string', internalType: 'string' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'tokenYear',
+    inputs: [{ name: 'tokenId', type: 'uint256', internalType: 'uint256' }],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'balanceOf',
+    inputs: [{ name: 'owner', type: 'address', internalType: 'address' }],
+    outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'event',
+    name: 'Transfer',
+    inputs: [
+      { name: 'from', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'to', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'tokenId', type: 'uint256', indexed: true, internalType: 'uint256' },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'MilestoneMinted',
+    inputs: [
+      { name: 'user', type: 'address', indexed: true, internalType: 'address' },
+      { name: 'year', type: 'uint256', indexed: false, internalType: 'uint256' },
+      { name: 'tokenId', type: 'uint256', indexed: false, internalType: 'uint256' },
+      { name: 'timestamp', type: 'uint256', indexed: false, internalType: 'uint256' },
+    ],
+    anonymous: false,
+  },
+] as const
+
 // HumanBond ABI - Only the functions we need
 export const HUMAN_BOND_ABI = [
   {
@@ -122,6 +198,13 @@ export const HUMAN_BOND_ABI = [
     type: 'function',
     name: 'divorce',
     inputs: [{ name: 'partner', type: 'address', internalType: 'address' }],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'manualCheckAndMint',
+    inputs: [],
     outputs: [],
     stateMutability: 'nonpayable',
   },

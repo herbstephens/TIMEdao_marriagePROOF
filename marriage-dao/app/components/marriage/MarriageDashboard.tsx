@@ -17,10 +17,10 @@ type ClaimState = "idle" | "sending" | "success" | "error";
 
 interface MarriageDashboardProps {
     dashboard: UserDashboard;
-    onDivorce?: () => void; // Callback to refresh dashboard after divorce
+    onRefresh?: () => void; // Callback to refresh dashboard data
 }
 
-export function MarriageDashboard({ dashboard, onDivorce }: MarriageDashboardProps) {
+export function MarriageDashboard({ dashboard, onRefresh }: MarriageDashboardProps) {
     const { walletAddress } = useAuthStore();
     const [divorceState, setDivorceState] = useState<DivorceState>("idle");
     const [claimState, setClaimState] = useState<ClaimState>("idle");
@@ -61,8 +61,8 @@ export function MarriageDashboard({ dashboard, onDivorce }: MarriageDashboardPro
             setClaimState("success");
 
             // Call callback to refresh dashboard
-            if (onDivorce) {
-                onDivorce();
+            if (onRefresh) {
+                onRefresh();
             }
         } catch (err) {
             setClaimState("error");
@@ -99,8 +99,8 @@ export function MarriageDashboard({ dashboard, onDivorce }: MarriageDashboardPro
             setShowConfirm(false);
 
             // Call callback to refresh dashboard
-            if (onDivorce) {
-                onDivorce();
+            if (onRefresh) {
+                onRefresh();
             }
         } catch (err) {
             setDivorceState("error");
@@ -115,7 +115,7 @@ export function MarriageDashboard({ dashboard, onDivorce }: MarriageDashboardPro
     return (
         <div className="w-full max-w-2xl space-y-4">
             {/* Marriage Status Card */}
-            <div className="bg-white rounded-3xl p-5 mt-5 shadow-lg space-y-6">
+            <div className="bg-white rounded-3xl p-5 mt-15 shadow-lg space-y-6">
                 {/* Title */}
                 <div className="text-center space-y-2">
                     <h2 className="text-4xl font-bold text-black">💒</h2>
@@ -171,7 +171,13 @@ export function MarriageDashboard({ dashboard, onDivorce }: MarriageDashboardPro
                 </div>
 
                 {/* Divorce Section */}
-                <div className="pt-4 border-t border-gray-200">
+                <div className="pt-4 border-t border-gray-200 space-y-3">
+                    <button
+                        onClick={() => window.location.href = '/marriage/gallery'}
+                        className="w-full py-3 px-6 rounded-full text-sm font-medium text-amber-900 bg-amber-50 hover:bg-amber-100 transition-colors"
+                    >
+                        🖼️ View Memories
+                    </button>
                     <button
                         onClick={() => setShowConfirm(true)}
                         className="w-full py-3 px-6 rounded-full text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
@@ -204,35 +210,35 @@ export function MarriageDashboard({ dashboard, onDivorce }: MarriageDashboardPro
             {showConfirm && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                     {/* Overlay */}
-                    <div 
+                    <div
                         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
                         onClick={() => !divorceState.includes("sending") && setShowConfirm(false)}
                     />
-                    
+
                     {/* Modal */}
                     <div className="relative bg-white rounded-3xl p-6 mx-4 max-w-sm w-full shadow-2xl space-y-4 animate-in fade-in zoom-in duration-200">
                         {/* Icon */}
                         <div className="text-center">
                             <span className="text-4xl">💔</span>
                         </div>
-                        
+
                         {/* Title */}
                         <h3 className="text-xl font-semibold text-gray-900 text-center">
                             End Marriage?
                         </h3>
-                        
+
                         {/* Description */}
                         <p className="text-sm text-gray-600 text-center">
                             Are you sure you want to end this marriage? Pending TIME tokens will be distributed to both partners.
                         </p>
-                        
+
                         {/* Error Message */}
                         {error && (
                             <div className="p-3 bg-red-50 border border-red-200 rounded-xl">
                                 <p className="text-sm text-red-800 text-center">{error}</p>
                             </div>
                         )}
-                        
+
                         {/* Success Message */}
                         {divorceState === "success" && (
                             <div className="p-3 bg-green-50 border border-green-200 rounded-xl">
@@ -241,7 +247,7 @@ export function MarriageDashboard({ dashboard, onDivorce }: MarriageDashboardPro
                                 </p>
                             </div>
                         )}
-                        
+
                         {/* Buttons */}
                         <div className="flex gap-3 pt-2">
                             <button

@@ -148,7 +148,7 @@ export default function HomePage() {
         ) : (
           <div className="flex flex-col items-center text-center">
             {/* Marriage Dashboard */}
-            {dashboard && isConnected && <MarriageDashboard dashboard={dashboard} onDivorce={refetch} />}
+            {dashboard && isConnected && <MarriageDashboard dashboard={dashboard} onRefresh={refetch} />}
           </div>
         )}
       </main>
